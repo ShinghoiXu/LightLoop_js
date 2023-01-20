@@ -15,7 +15,6 @@ function setup() {
   
   video = createCapture({
     video: {
-      deviceId: 'daa1f39c7f71bc5dd07702f3eebec3b02bb1de8b0678afbe63963ed7b1eeb83d'
     }
   });
   video.size(1920,1080);
