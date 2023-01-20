@@ -4,19 +4,17 @@ let tracking = false;
 const duration = 2;
 let playheadX = 0, seqWidth = 640, display = [];
 let trackPoints = [];
-let video;
+let video,sampler;
 
 function setup() {
   createCanvas(640, 480).position(20,100);
+  frameRate(60);
   background(20);
   strokeWeight(4);
   stroke(0);
   rectMode(CENTER);
   
-  video = createCapture({
-    video: {
-    }
-  });
+  video = createCapture(VIDEO);
   video.size(1920,1080);
   video.hide();
   
@@ -42,17 +40,18 @@ function setup() {
     let go = createButton('Start!')
     go.position(314, 400);
     go.mousePressed(() => {
+      Tone.start();
       Tone.Transport.start();
+      sampler = new Tone.Sampler(sampleMap).connect(reverb);
       go.remove();
       setTimeout(() => {
         tracking = true;
-      },100);
+      },10);
     });
   }
 }
 
 function draw() {
-  
   
   if (Tone.Transport.state == 'started') {
     background(67,125,222);
@@ -97,24 +96,6 @@ function draw() {
   
 }
 
-/*
-function keyPressed() {
-  if (keyCode == 32 && Tone.Transport.state == 'started') {
-    if (!tapping) {
-      tapping = true;
-      tapInit = Tone.Transport.seconds;
-      tapBeats = [0];
-      setTimeout(() => {
-        tapping = false;
-        generate(tap2gen(tapBeats));
-      }, duration * 1000);
-    } else {
-      tapBeats.push(Tone.Transport.seconds - tapInit)
-    }
-  }
-}
-*/
-
 function mousePressed(){
   if (Tone.Transport.state == 'started' && tracking){
     trackPoints.push(createVector(mouseX,mouseY));
@@ -151,8 +132,24 @@ function trackAndPlay() {
       }
       
     }
-    generate(tap2gen(tapBeats));
-
-      
+    generate(tap2gen(tapBeats));  
   }
 }
+
+/*
+function keyPressed() {
+  if (keyCode == 32 && Tone.Transport.state == 'started') {
+    if (!tapping) {
+      tapping = true;
+      tapInit = Tone.Transport.seconds;
+      tapBeats = [0];
+      setTimeout(() => {
+        tapping = false;
+        generate(tap2gen(tapBeats));
+      }, duration * 1000);
+    } else {
+      tapBeats.push(Tone.Transport.seconds - tapInit)
+    }
+  }
+}
+*/

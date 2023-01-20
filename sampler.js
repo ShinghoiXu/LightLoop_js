@@ -53,4 +53,3 @@ function reMap(m) {
     wet: 0.25
   }).toDestination();
   
-  const sampler = new Tone.Sampler(sampleMap).connect(reverb);
