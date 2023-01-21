@@ -5,23 +5,46 @@ const duration = 2;
 let playheadX = 0, seqWidth = 640, display = [];
 let trackPoints = [];
 let video,sampler;
+let flag = IsPC();
+let options = {
+     video: {
+         facingMode: {
+          exact: "environment"
+        }
+     }
+   };
+
 
 function setup() {
-  createCanvas(640, 480).position(20,100);
+  if(flag == true){
+    createCanvas(640, 480).position(20,100);
+  }
+  else{
+    createCanvas(640, 1200).position(20,100);
+  }
+  
   frameRate(60);
   background(20);
   strokeWeight(4);
   stroke(0);
   rectMode(CENTER);
   
-  video = createCapture(VIDEO);
-  video.size(1920,1080);
+  if(flag == true){
+    video = createCapture(VIDEO);
+    video.size(1920,1080);
+  }
+  else{
+    video = createCapture(options);
+    video.size(750,1334);
+  }
+  
+  
   video.hide();
   
   let h3 = createElement('h3', 'Loading...');
   h3.style('color', 'white');
   h3.style('font-family', 'courier');
-  h3.position(200, 235);
+  h3.position(width/2, height/2);
   
   model.initialize().then(txt);
   
@@ -55,7 +78,13 @@ function draw() {
   
   if (Tone.Transport.state == 'started') {
     background(67,125,222);
-    image(video,0,0,640,320);
+    if(flag == true){
+      image(video,0,0,640,360);
+    }
+    else{
+      image(video,0,0,360,640);
+    }
+    
     fill(255, 100, 0);
     circle(playheadX + 40, 400, 10);
     trackPointsDis();
@@ -136,20 +165,48 @@ function trackAndPlay() {
   }
 }
 
-/*
-function keyPressed() {
-  if (keyCode == 32 && Tone.Transport.state == 'started') {
-    if (!tapping) {
-      tapping = true;
-      tapInit = Tone.Transport.seconds;
-      tapBeats = [0];
-      setTimeout(() => {
-        tapping = false;
-        generate(tap2gen(tapBeats));
-      }, duration * 1000);
-    } else {
-      tapBeats.push(Tone.Transport.seconds - tapInit)
+function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
     }
-  }
+    return flag;
 }
-*/
+
+function switchCamera()
+{
+  switchFlag = !switchFlag;
+  stopCapture();
+  if(switchFlag==true)
+  {
+   video.remove();
+   options = {
+     video: {
+         facingMode: {
+          exact: "environment"
+        }
+     }
+   };
+
+  }
+  else
+  {
+   video.remove();
+   options = {
+     video: {
+         facingMode: {
+          exact: "user"
+        }
+     }
+   };
+  }
+  video = createCapture(options);
+}
+ 
