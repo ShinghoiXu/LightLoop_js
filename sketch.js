@@ -2,9 +2,10 @@ let tapping = false, tapInit, tapBeats = [];
 let lightThreshold = 70;
 let tracking = false;
 const duration = 2;
-let playheadX = 0, seqWidth = 640, display = [];
+let playheadX = 0, seqWidth = 600, display = [];
 let trackPoints = [];
-let video,sampler,heightBaseline;
+let video,sampler;
+let heightBaseline = 400;
 let flag;
 let options = {
      video: {
@@ -18,14 +19,13 @@ let options = {
 function setup() {
   flag = IsPC();
   if(flag == true){
-    createCanvas(640, 480).position(20,100);
+    createCanvas(640, 470).position(20,100);
     heightBaseline = 400;
   }
   else{
     createCanvas(640, 1200).position(20,100);
     heightBaseline = 1100;
   }
-  
   
   frameRate(60);
   background(20);
@@ -39,7 +39,7 @@ function setup() {
   }
   else{
     video = createCapture(options);
-    video.size(750,1334);
+    video.size(640,1080);
   }
   
   
@@ -56,7 +56,7 @@ function setup() {
     
     h3.remove();
 
-    print(heightBaseline);
+    
     
     textAlign(CENTER, CENTER);
     textFont('Courier');
@@ -64,10 +64,10 @@ function setup() {
     textSize(16);
     text('LightLoop is a project\n designed to interpret lights in windows\n into drum beat loops\n\n↓', width/2, 160);
     textSize(14);
-    text('  by Chengkai Xu',width/2,heightBaseline+80);
+    text('by Chengkai Xu',width/2,height/2+100);
     
     let go = createButton('Start!')
-    go.position(314, 400);
+    go.position(width/2-6, height/2);
     go.mousePressed(() => {
       Tone.start();
       Tone.Transport.start();
@@ -75,7 +75,7 @@ function setup() {
       go.remove();
       setTimeout(() => {
         tracking = true;
-      },10);
+      },2);
     });
   }
 }
@@ -83,17 +83,20 @@ function setup() {
 function draw() {
   
   if (Tone.Transport.state == 'started') {
+    //print(heightBaseline);
     background(67,125,222);
     if(flag == true){
       image(video,0,0,640,360);
+      heightBaseline = 400;
     }
     else{
-      image(video,0,0,640,1130);
+      image(video,0,0,640,1080);
+      heightBaseline = 1100;
     }
     
     fill(255, 100, 0);
     noStroke();
-    circle(playheadX + 40, heightBaseline-20, 10);
+    circle(playheadX, heightBaseline-6, 10);
     trackPointsDis();
     if(frameCount % 200 == 0){
       trackAndPlay();
@@ -122,8 +125,8 @@ function draw() {
           v = 1;
         }
         circle(x + 40,
-          display[i].position * 2 + heightBaseline,
-          display[i].velocity * v * 20 + 2);
+          display[i].position * 2 + heightBaseline+4,
+          display[i].velocity * v * 18 + 1);
       }
     }
     
@@ -153,18 +156,16 @@ function trackPointsDis(){
 }
 
 function trackAndPlay() {
+  let i;
   if (tracking && trackPoints.length >= 2 && Tone.Transport.state == 'started') {
     tapBeats = [0];
-    timeCache = 1;
-    for(let i = 0 ; i < trackPoints.length ; i++){
+    for(i = 0 ; i < trackPoints.length ; i++){
+      thisbeat = 0;
+      //print(i);
       if(brightness(get(trackPoints[i].x,trackPoints[i].y))>lightThreshold || i == trackPoints.length-1){
-        thisbeat = timeCache * duration / (trackPoints.length+1) + random(0.08,0.1);
-        print(timeCache * duration / (trackPoints.length+1));
+        thisbeat = (i+1.0) * duration / (trackPoints.length+1) + random(0.01,0.05);
+        //print(thisbeat);
         tapBeats.push(thisbeat);
-        timeCache = 1;
-      }
-      else{
-        timeCache++;
       }
       
     }
