@@ -5,7 +5,7 @@ const duration = 2;
 let playheadX = 0, seqWidth = 640, display = [];
 let trackPoints = [];
 let video,sampler,heightBaseline;
-let flag = IsPC();
+let flag;
 let options = {
      video: {
          facingMode: {
@@ -16,6 +16,7 @@ let options = {
 
 
 function setup() {
+  flag = IsPC();
   if(flag == true){
     createCanvas(640, 480).position(20,100);
     heightBaseline = 400;
