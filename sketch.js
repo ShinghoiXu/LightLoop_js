@@ -78,7 +78,7 @@ function setup() {
     text('by Chengkai Xu',width/2,height/2+100);
     
     let go = createButton('Start!')
-    go.position(width/2-6, 300);
+    go.position(width/2-6, 390);
     go.mousePressed(() => {
       Tone.start();
       Tone.Transport.start();
