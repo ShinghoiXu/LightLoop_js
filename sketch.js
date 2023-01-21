@@ -4,24 +4,51 @@ let tracking = false;
 const duration = 2;
 let playheadX = 0, seqWidth = 640, display = [];
 let trackPoints = [];
-let video,sampler;
+let video,sampler,heightBaseline;
+let flag;
+let options = {
+     video: {
+         facingMode: {
+          exact: "environment"
+        }
+     }
+   };
+
 
 function setup() {
-  createCanvas(640, 480).position(20,100);
+  flag = IsPC();
+  if(flag == true){
+    createCanvas(640, 480).position(20,100);
+    heightBaseline = 400;
+  }
+  else{
+    createCanvas(640, 1200).position(20,100);
+    heightBaseline = 1100;
+  }
+  print(heightBaseline);
+  
   frameRate(60);
   background(20);
   strokeWeight(4);
   stroke(0);
   rectMode(CENTER);
   
-  video = createCapture(VIDEO);
-  video.size(1920,1080);
+  if(flag == true){
+    video = createCapture(VIDEO);
+    video.size(1920,1080);
+  }
+  else{
+    video = createCapture(options);
+    video.size(750,1334);
+  }
+  
+  
   video.hide();
   
   let h3 = createElement('h3', 'Loading...');
   h3.style('color', 'white');
   h3.style('font-family', 'courier');
-  h3.position(200, 235);
+  h3.position(width/3, height/2);
   
   model.initialize().then(txt);
   
@@ -33,9 +60,9 @@ function setup() {
     textFont('Courier');
     fill(220);
     textSize(16);
-    text('LightLoop is a project\n designed to interpret lights in windows\n into drum beat loops\n\n↓', 320, 160);
-    textSize(12);
-    text('  by Chengkai Xu',320,420);
+    text('LightLoop is a project\n designed to interpret lights in windows\n into drum beat loops\n\n↓', width/2, 160);
+    textSize(14);
+    text('  by Chengkai Xu',width/2,heightBaseline+80);
     
     let go = createButton('Start!')
     go.position(314, 400);
@@ -55,9 +82,16 @@ function draw() {
   
   if (Tone.Transport.state == 'started') {
     background(67,125,222);
-    image(video,0,0,640,320);
+    if(flag == true){
+      image(video,0,0,640,360);
+    }
+    else{
+      image(video,0,0,640,1130);
+    }
+    
     fill(255, 100, 0);
-    circle(playheadX + 40, 400, 10);
+    noStroke();
+    circle(playheadX + 40, heightBaseline-20, 10);
     trackPointsDis();
     if(frameCount % 200 == 0){
       trackAndPlay();
@@ -67,9 +101,9 @@ function draw() {
       stroke(200);
       for (i = 0; i < tapBeats.length; i++) {
         let x = (tapBeats[i] - tapBeats[0]) / 2 * seqWidth;
-        line(x + 40, 430, x + 40, 450);
+        line(x + 40, heightBaseline, x + 40, heightBaseline+20);
       }
-      line(seqWidth-40, 430, seqWidth-40, 450);
+      line(seqWidth-40, heightBaseline, seqWidth-40, heightBaseline+20);
       noStroke();
     }
 
@@ -86,7 +120,7 @@ function draw() {
           v = 1;
         }
         circle(x + 40,
-          display[i].position * 2 + 340,
+          display[i].position * 2 + heightBaseline,
           display[i].velocity * v * 20 + 2);
       }
     }
@@ -136,20 +170,48 @@ function trackAndPlay() {
   }
 }
 
-/*
-function keyPressed() {
-  if (keyCode == 32 && Tone.Transport.state == 'started') {
-    if (!tapping) {
-      tapping = true;
-      tapInit = Tone.Transport.seconds;
-      tapBeats = [0];
-      setTimeout(() => {
-        tapping = false;
-        generate(tap2gen(tapBeats));
-      }, duration * 1000);
-    } else {
-      tapBeats.push(Tone.Transport.seconds - tapInit)
+function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
     }
-  }
+    return flag;
 }
-*/
+
+function switchCamera()
+{
+  switchFlag = !switchFlag;
+  stopCapture();
+  if(switchFlag==true)
+  {
+   video.remove();
+   options = {
+     video: {
+         facingMode: {
+          exact: "environment"
+        }
+     }
+   };
+
+  }
+  else
+  {
+   video.remove();
+   options = {
+     video: {
+         facingMode: {
+          exact: "user"
+        }
+     }
+   };
+  }
+  video = createCapture(options);
+}
+ 
