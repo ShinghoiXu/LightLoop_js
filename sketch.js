@@ -25,7 +25,7 @@ function setup() {
     createCanvas(640, 1200).position(20,100);
     heightBaseline = 1100;
   }
-  print(heightBaseline);
+  
   
   frameRate(60);
   background(20);
@@ -55,6 +55,8 @@ function setup() {
   function txt() {
     
     h3.remove();
+
+    print(heightBaseline);
     
     textAlign(CENTER, CENTER);
     textFont('Courier');
