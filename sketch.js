@@ -18,12 +18,13 @@ let options = {
 function setup() {
   if(flag == true){
     createCanvas(640, 480).position(20,100);
-    heightBaseline = 340;
+    heightBaseline = 400;
   }
   else{
     createCanvas(640, 1200).position(20,100);
     heightBaseline = 1100;
   }
+  print(heightBaseline);
   
   frameRate(60);
   background(20);
