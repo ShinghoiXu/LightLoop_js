@@ -59,9 +59,22 @@ function setup() {
     textAlign(CENTER, CENTER);
     textFont('Courier');
     fill(220);
-    textSize(16);
+
+    if(flag == true){
+      textSize(16);
+    }
+    else{
+      textSize(22);
+    }
+    
     text('LightLoop is a project\n designed to interpret lights in windows\n into drum beat loops\n\n↓', width/2, 160);
-    textSize(14);
+    
+    if(flag == true){
+      textSize(16);
+    }
+    else{
+      textSize(20);
+    }
     text('by Chengkai Xu',width/2,height/2+100);
     
     let go = createButton('Start!')
