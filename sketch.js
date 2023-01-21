@@ -16,17 +16,7 @@ let options = {
 
 
 function setup() {
-  flag = IsPC();
-  if(flag == true){
-    createCanvas(640, 480).position(20,100);
-    heightBaseline = 400;
-  }
-  else{
-    createCanvas(640, 1200).position(20,100);
-    heightBaseline = 1100;
-  }
-  
-  
+  createCanvas(640, 480).position(20,100);
   frameRate(60);
   background(20);
   strokeWeight(4);
