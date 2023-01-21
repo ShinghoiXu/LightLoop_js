@@ -24,7 +24,7 @@ function setup() {
   }
   else{
     createCanvas(640, 1200).position(20,100);
-    heightBaseline = 1100;
+    heightBaseline = 1110;
   }
   
   frameRate(60);
@@ -55,8 +55,6 @@ function setup() {
   function txt() {
     
     h3.remove();
-
-    
     
     textAlign(CENTER, CENTER);
     textFont('Courier');
@@ -91,7 +89,7 @@ function draw() {
     }
     else{
       image(video,0,0,640,1080);
-      heightBaseline = 1100;
+      heightBaseline = 1110;
     }
     
     fill(255, 100, 0);
